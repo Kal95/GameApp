@@ -1,0 +1,22 @@
+﻿<!-- AddConfiguration.cshtml -->
+
+<h1>Add Configuration</h1>
+
+<form asp-action="AddConfiguration" method="post">
+    <div class="mb-3">
+        <label for="gameName" class="form-label">Game Name</label>
+        <input type="text" class="form-control" id="gameName" name="GameName" placeholder="Enter game name" required>
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" class="form-control" id="price" name="PricePerHour" placeholder="Enter price" required>
+    </div>
+    <div class="mb-3">
+        <label for="duration" class="form-label">Duration</label>
+        <select class="form-select" id="duration" name="Duration">
+            <option value="hour">Per Hour</option>
+            <option value="half-hour">Per Half Hour</option>
+        </select>
+    </div>
+    <button type="submit">Submit</button>
+</form>

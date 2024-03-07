@@ -1,0 +1,65 @@
+﻿@model IEnumerable<GameRegistrationModel>
+
+
+@{
+    ViewData["Title"] = "Register New Gamer";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1>Register New Gamer</h1>
+
+    <form method="post" action="@Url.Action("RegisterGamer")">
+        <div class="form-group">
+            <label for="GamerName">Gamer Name:</label>
+            <input type="text" class="form-control" id="GamerName" name="GamerName" placeholder="Enter gamer name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="GameName">Game Name:</label>
+            <select class="form-control" id="GameName" name="GameName" placeholder="Choose game name" required>
+                <option value="">Select Game</option>
+                <!-- Populate this dropdown with games from Game Configuration -->
+                @foreach (var gameConfig in ViewBag.GameConfigurations)
+                {
+                    <option value="@gameConfig.GameName">@gameConfig.GameName</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="DurationInMinutes">Duration (minutes):</label>
+            <input type="number" class="form-control" id="DurationInMinutes" name="DurationInMinutes" placeholder="Enter game time in minutes" required>
+        </div>
+
+        <div class="form-group">
+            <label for="TotalPrice">Total Price:</label>
+            <input type="text" class="form-control" id="TotalPrice" name="TotalPrice" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register Gamer</button>
+    </form>
+</div>
+
+<script>
+    // Calculate total price based on selected game and duration
+    $(document).ready(function () {
+        $('#GameName, #DurationInMinutes').change(function () {
+            var gameName = $('#GameName').val();
+            var duration = $('#DurationInMinutes').val();
+
+            // Make an AJAX request to calculate total price
+            $.ajax({
+                url: '@Url.Action("CalculateTotalPrice")',
+                type: 'POST',
+                data: { gameName: gameName, duration: duration },
+                success: function (result) {
+                    $('#TotalPrice').val(result);
+                },
+                error: function () {
+                    console.error('Error calculating total price');
+                }
+            });
+        });
+    });
+</script>

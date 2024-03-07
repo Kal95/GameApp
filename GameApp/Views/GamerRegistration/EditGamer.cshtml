@@ -1,0 +1,75 @@
+﻿@model GameRegistrationModel
+
+@{
+    ViewData["Title"] = "Edit Gamer";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1>Edit Gamer</h1>
+
+    <form method="post" action="@Url.Action("EditGamer")">
+        <input type="hidden" name="Id" value="@Model.Id">
+
+        <div class="form-group">
+            <label for="GamerName">Gamer Name:</label>
+            <input type="text" class="form-control" id="GamerName" name="GamerName" value="@Model.GamerName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="GameName">Game Name:</label>
+            <select class="form-control" id="GameName" name="GameName" required>
+                <option value="@Model.GameName">@Model.GameName</option>
+                <!-- Populate this dropdown with games from Game Configuration -->
+                @foreach (var gameConfig in ViewBag.GameConfigurations)
+                {
+                    <option value="@gameConfig.GameName">@gameConfig.GameName</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="DurationInMinutes">Duration (minutes):</label>
+            <input type="number" class="form-control" id="DurationInMinutes" name="DurationInMinutes" value="@Model.DurationInMinutes" required>
+        </div>
+
+        <div class="form-group">
+            <label for="TotalPrice">Total Price:</label>
+            <input type="text" class="form-control" id="TotalPrice" name="TotalPrice" value="@Model.TotalPrice" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Gamer</button>
+    </form>
+</div>
+
+<script>
+    // Calculate total price based on selected game and duration
+    $(document).ready(function () {
+        // Initial calculation on page load
+        calculateTotalPrice();
+
+        // Recalculate when GameName or DurationInMinutes change
+        $('#GameName, #DurationInMinutes').change(function () {
+            calculateTotalPrice();
+        });
+
+        function calculateTotalPrice() {
+            var gameName = $('#GameName').val();
+            var duration = $('#DurationInMinutes').val();
+
+            // Make an AJAX request to calculate total price
+            $.ajax({
+                url: '@Url.Action("CalculateTotalPrice")',
+                type: 'POST',
+                data: { gameName: gameName, duration: duration },
+                success: function (result) {
+                    $('#TotalPrice').val(result);
+                },
+                error: function () {
+                    console.error('Error calculating total price');
+                }
+            });
+        }
+    });
+</script>
+

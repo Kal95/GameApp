@@ -1,0 +1,48 @@
+﻿@model IEnumerable<GameRegistrationModel>
+
+@{
+    ViewData["Title"] = "Registered Gamers";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1>Registered Gamers</h1>
+
+    <div>
+        @if (Model != null && Model.Any())
+        {
+            <p>Total Cost of Games Played in the Past 24 Hours: $@Model.Sum(m => m.TotalPrice)</p>
+        }
+        else
+        {
+            <p>No games played in the past 24 hours.</p>
+        }
+        <a class="btn btn-primary" href="@Url.Action("RegisterGamer")">Register New Gamer</a>
+    </div>
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Gamer Name</th>
+                <th>Game Name</th>
+                <th>Duration (minutes)</th>
+                <th>Total Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gamer in Model ?? Enumerable.Empty<GameRegistrationModel>())
+            {
+                <tr>
+                    <td>@gamer.GamerName</td>
+                    <td>@gamer.GameName</td>
+                    <td>@gamer.DurationInMinutes</td>
+                    <td>$@gamer.TotalPrice</td>
+                    <td>
+                        <a class="btn btn-warning" href="@Url.Action("EditGamer", new { id = gamer.Id })">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
